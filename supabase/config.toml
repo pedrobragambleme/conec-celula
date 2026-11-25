@@ -1,0 +1,13 @@
+# Usado só se você publicar as funções pela linha de comando (supabase CLI).
+# Pelo painel do Supabase, ajuste "Verify JWT" de cada função como está abaixo.
+[functions.notificar]
+verify_jwt = false
+
+[functions.mp-webhook]
+verify_jwt = false
+
+[functions.mp-assinar]
+verify_jwt = true
+
+[functions.mp-cancelar]
+verify_jwt = true
