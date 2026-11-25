@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gerar chaves de notificação — Conec Célula</title>
+<style>body{font-family:system-ui,sans-serif;max-width:640px;margin:40px auto;padding:0 16px;color:#1d2b36}
+button{background:#0E5E6F;color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:16px}
+label{display:block;margin-top:18px;font-weight:600}textarea{width:100%;font-family:monospace;font-size:13px;padding:8px;border-radius:8px;border:1px solid #ccc}</style></head>
+<body>
+<h1>Chaves de notificação (VAPID)</h1>
+<p>Abra este arquivo no navegador do seu computador, clique no botão e copie as duas chaves. Tudo é gerado aqui mesmo, no seu navegador; nada é enviado para a internet.</p>
+<button id="b">Gerar chaves</button>
+<label>VAPID_PUBLIC_KEY (vai no app/js/config.js <b>e</b> nos Secrets do Supabase)</label>
+<textarea id="pub" rows="3" readonly></textarea>
+<label>VAPID_PRIVATE_KEY (vai <b>só</b> nos Secrets do Supabase — não compartilhe)</label>
+<textarea id="priv" rows="2" readonly></textarea>
+<script>
+const b64u = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+document.getElementById('b').onclick = async () => {
+  const kp = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
+  document.getElementById('pub').value = b64u(await crypto.subtle.exportKey('raw', kp.publicKey));
+  document.getElementById('priv').value = (await crypto.subtle.exportKey('jwk', kp.privateKey)).d;
+};
+</script>
+</body></html>
